@@ -4,11 +4,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { JobFormComponent } from './components/job-form/job-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { JobListComponent } from './components/job-list/job-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    JobFormComponent
+    JobFormComponent,
+    JobListComponent
   ],
   imports: [
     BrowserModule,
