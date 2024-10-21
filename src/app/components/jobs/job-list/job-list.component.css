@@ -1,0 +1,145 @@
+/* Conteneur principal */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Style du titre */
+h2 {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 2rem;
+  color: #007bff;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+
+/* Carte contenant la table */
+.card {
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  background-color: #fff;
+}
+
+/* Style des tables */
+.table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.table th,
+.table td {
+  padding: 12px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.table thead th {
+  background-color: #007bff;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: bold;
+}
+
+.table tbody tr:hover {
+  background-color: #f2f2f2;
+  transition: background-color 0.3s ease;
+}
+
+/* Boutons dans la table */
+button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+button.btn-dark {
+  background-color: #343a40;
+}
+
+button.btn-dark:hover {
+  background-color: #23272b;
+}
+
+button.btn-danger {
+  background-color: #e74c3c;
+}
+
+button.btn-danger:hover {
+  background-color: #c0392b;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Ajout d'une ombre sur les boutons au survol */
+button:hover {
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Modale de confirmation */
+.modal-content {
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+}
+
+.modal-footer button {
+  padding: 10px 20px;
+  border-radius: 20px;
+}
+
+.modal-footer .btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.modal-footer .btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+.modal-footer .btn-danger {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.modal-footer .btn-danger:hover {
+  background-color: #c0392b;
+}
+
+/* Style pour le bouton "Ajouter un emploi" */
+.btn-primary {
+  background-color: #007bff;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  padding: 10px 30px;
+  color: white;
+  font-weight: bold;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
+}

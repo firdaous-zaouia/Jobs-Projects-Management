@@ -1,21 +1,21 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { JobFormComponent } from './job-form.component';
+import { JobFormComponent } from "./job-form.component";
 
-describe('JobFormComponent', () => {
+describe("JobFormComponent", () => {
   let component: JobFormComponent;
   let fixture: ComponentFixture<JobFormComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [JobFormComponent]
+      declarations: [JobFormComponent],
     });
     fixture = TestBed.createComponent(JobFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

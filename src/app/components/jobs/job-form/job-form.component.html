@@ -1,0 +1,119 @@
+<div class="container mt-5">
+  <h2 class="text-center mb-4 text-primary">Enregistrement d'un Poste</h2>
+
+  <div class="card border-0 shadow p-4">
+    <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
+
+      <!-- Première ligne : Résponsable et Titre du poste  -->
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="responsable" class="form-label fw-bold">Résponsable</label>
+          <input [class.is-invalid]="responsable?.invalid && responsable?.touched" type="text" id="titre"
+            formControlName="responsable" class="form-control form-control-lg" />
+          <div *ngIf="responsable?.invalid && responsable?.touched" class="invalid-feedback">
+            <small *ngIf="responsable?.hasError('required')">le Nom du Responsable de l'emploi est obligatoire</small>
+            <small *ngIf="responsable?.hasError('pattern')">Le champ du Responsable doit contenir une nom
+              valide.</small>
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label for="titre" class="form-label fw-bold">Titre du Poste</label>
+          <input [class.is-invalid]="titre?.invalid && titre?.touched" type="text" id="titre" formControlName="titre"
+            class="form-control form-control-lg" />
+          <div *ngIf="titre?.invalid && titre?.touched" class="invalid-feedback">
+            <small *ngIf="titre?.hasError('required')">Le titre est obligatoire</small>
+            <small *ngIf="titre?.hasError('minlength')">Le titre doit contenir au moins 3 caractères</small>
+          </div>
+        </div>
+
+
+        <!-- Deuxiéme ligne : Localisation et Catégorie du poste  -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="localisation" class="form-label fw-bold">Localisation</label>
+            <select name="localisation" formControlName="localisation" class="form-control form-control-lg">
+              <option *ngFor="let localisation of localisations" [value]="localisation">{{localisation}}</option>
+            </select>
+            <div *ngIf="localisation?.invalid && localisation?.touched" class="invalid-feedback">
+              <small *ngIf="localisation?.hasError('required')">La localisation est obligatoire.</small>
+              <small *ngIf="localisation?.hasError('pattern')">La localisation doit être une chaîne de caractères
+                valide.</small>
+            </div>
+          </div>
+
+
+          <div class="col-md-6 mb-3">
+            <label for="categorie" class="form-label fw-bold">Catégorie</label>
+            <select id="categorie" formControlName="categorie" class="form-control form-control-lg">
+              <option *ngFor="let categorie of categories" [value]="categorie">{{categorie}}</option>
+            </select>
+            <div *ngIf="categorie?.invalid && categorie?.touched" class="invalid-feedback">
+              <small *ngIf="categorie?.hasError('required')">La catégorie est obligatoire.</small>
+              <small *ngIf="categorie?.hasError('pattern')">La catégorie doit être une chaîne de caractères
+                valide.</small>
+            </div>
+          </div>
+        </div>
+
+
+        <!--Troisiéme ligne : Dates de début et de fin -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="dateDebut" class="form-label fw-bold">Date de début</label>
+            <input [class.is-invalid]="dateDebut?.invalid && dateDebut?.touched" type="date" id="dateDebut"
+              formControlName="dateDebut" class="form-control form-control-lg" />
+            <div *ngIf="dateDebut?.invalid && dateDebut?.touched" class="invalid-feedback">
+              <small *ngIf="dateDebut?.hasError('required')">La date de début est obligatoire.</small>
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="dateFin" class="form-label fw-bold">Date de fin</label>
+            <input [class.is-invalid]="jobForm.errors?.['dateValue']" type="date" id="dateFin" formControlName="dateFin"
+              class="form-control form-control-lg" />
+            <div class="invalid-feedback">
+              <small *ngIf="jobForm.errors?.['dateValue']">La date de fin doit être supérieure à la date de
+                début.</small>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Quatriéme ligne : Salire et Description du poste -->
+        <div class="row">
+
+          <div class="col-md-6 mb-3">
+            <label for="salaire" class="form-label fw-bold">Salaire</label>
+            <div class="input-group">
+              <input type="text" id="salaire" formControlName="salaire" class="form-control form-control-lg"
+                (blur)="onSalaryBlur()" />
+            </div>
+            <div *ngIf="salaire?.invalid && salaire?.touched" class="invalid-feedback">
+              <small *ngIf="salaire?.hasError('required')">Le salaire est obligatoire.</small>
+              <small *ngIf="salaire?.hasError('min')">Le salaire doit être supérieur ou égal à 0.</small>
+              <small *ngIf="salaire?.hasError('pattern')">Le salaire doit être un nombre valide.</small>
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="description" class="form-label fw-bold">Description</label>
+            <textarea [class.is-invalid]="description?.invalid && description?.touched" id="description"
+              formControlName="description" class="form-control form-control-lg" rows="3"
+              placeholder="Décrivez le poste"></textarea>
+            <div *ngIf="description?.invalid && description?.touched" class="invalid-feedback">
+              <small *ngIf="description?.hasError('required')">La description est obligatoire.</small>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <!-- Bouton -->
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary btn-lg px-5" [disabled]="jobForm.invalid">
+          {{ isEditing ? "Mettre à jour" : "Créer" }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
