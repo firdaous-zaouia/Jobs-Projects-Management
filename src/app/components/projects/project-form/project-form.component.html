@@ -1,0 +1,89 @@
+<div class="container mt-5">
+  <h2 class="text-center mb-4 text-primary">ENREGISTREMENT D'UN PROJET</h2>
+  <div class="card border-0 shadow p-4">
+    <form [formGroup]="projectForm">
+      <!-- Premier ligne Titre et Catégorie -->
+      <div class="row">
+        <div class="col-md-6 mb-3 form-group">
+          <label for="titre" class="form-label fw-bold">Titre</label>
+          <input [class.is-invalid]="titre?.invalid && titre?.touched" formControlName="titre" type="text"
+            class="form-control form-control-lg" />
+          <div *ngIf="titre?.invalid && titre?.touched">
+            <small *ngIf="titre?.hasError('required')">Le titre est obligatoire</small>
+            <small *ngIf="titre?.hasError('minlength')">
+              Le titre doit avoir au moins 3 caractères
+            </small>
+            <small *ngIf="titre?.hasError('pattern')">Le titre doit être valide</small>
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-3 form-group">
+          <label for="categorie" class="form-label fw-bold">Catégorie</label>
+          <input [class.is-invalid]="categorie?.invalid && categorie?.touched" formControlName="categorie" type="text"
+            class="form-control form-control-lg" />
+          <div *ngIf="categorie?.invalid && categorie?.touched">
+            <small *ngIf="categorie?.hasError('required')">La catégorie est obligatoire</small>
+            <small *ngIf="categorie?.hasError('pattern')">La catégorie doit être valide</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deuxième ligne Localisation et Montant à atteindre -->
+      <div class="row">
+        <div class="col-md-6 mb-3 form-group">
+          <label for="localisation" class="form-label fw-bold">Localisation</label>
+          <input [class.is-invalid]="localisation?.invalid && localisation?.touched" formControlName="localisation"
+            type="text" class="form-control form-control-lg" />
+          <div *ngIf="localisation?.invalid && localisation?.touched">
+            <small *ngIf="localisation?.hasError('required')">La localisation est obligatoire</small>
+            <small *ngIf="localisation?.hasError('pattern')">La localisation doit être valide</small>
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-3 form-group">
+          <label for="montantAtteindre" class="form-label fw-bold">Montant à atteindre</label>
+          <input [class.is-invalid]="montantAtteindre?.invalid && montantAtteindre?.touched"
+            formControlName="montantAtteindre" type="number" class="form-control form-control-lg" />
+          <div *ngIf="montantAtteindre?.invalid && montantAtteindre?.touched">
+            <small *ngIf="montantAtteindre?.hasError('required')">Le montant est obligatoire</small>
+            <small *ngIf="montantAtteindre?.hasError('min')">
+              Le montant doit être supérieur ou égal à 0
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Troisième ligne Date de création et Date Limite -->
+      <div class="row">
+        <div class="col-md-6 mb-3 form-group">
+          <label for="dateCreation" class="form-label fw-bold">Date de Création</label>
+          <input [class.is-invalid]="dateCreation?.invalid && dateCreation?.touched" formControlName="dateCreation"
+            type="date" class="form-control form-control-lg" />
+          <div *ngIf="dateCreation?.invalid && dateCreation?.touched">
+            <small *ngIf="dateCreation?.hasError('required')">La date de Creation est obligatoire</small>
+          </div>
+        </div>
+        <div class="col-md-6 mb-3 form-group">
+          <label for="dateLimite" class="form-label fw-bold">Date Limite</label>
+          <input [class.is-invalid]="dateLimite?.invalid && dateLimite?.touched" formControlName="dateLimite"
+            type="date" class="form-control form-control-lg" />
+          <div *ngIf="dateLimite?.invalid && dateLimite?.touched">
+            <small *ngIf="dateLimite?.hasError('required')">La date Limite est obligatoire</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quatrième ligne Description -->
+      <div class="row">
+        <div class="col-md-12 mb-3 form-group">
+          <label for="description" class="form-label fw-bold">Description</label>
+          <textarea formControlName="description" class="form-control form-control-lg" rows="4"></textarea>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <button class="btn btn-primary btn-lg px-5" type="submit">Soumettre</button>
+      </div>
+    </form>
+  </div>
+</div>

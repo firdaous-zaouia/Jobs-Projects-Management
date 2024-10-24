@@ -12,7 +12,7 @@
             formControlName="responsable" class="form-control form-control-lg" />
           <div *ngIf="responsable?.invalid && responsable?.touched" class="invalid-feedback">
             <small *ngIf="responsable?.hasError('required')">le Nom du Responsable de l'emploi est obligatoire</small>
-            <small *ngIf="responsable?.hasError('pattern')">Le champ du Responsable doit contenir une nom
+            <small *ngIf="responsable?.hasError('pattern')">Le champ du Responsable doit contenir un nom
               valide.</small>
           </div>
         </div>

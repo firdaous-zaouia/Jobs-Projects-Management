@@ -3,6 +3,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { JobFormComponent } from "./components/jobs/job-form/job-form.component";
+import { ProjectFormComponent } from "./components/projects/project-form/project-form.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { JobListComponent } from "./components/jobs/job-list/job-list.component";
 import { StoreModule, MetaReducer } from "@ngrx/store";
@@ -24,7 +25,7 @@ export function localStorageSyncReducer(reducer: any): any {
 const metaReducers: MetaReducer<any>[] = [localStorageSyncReducer]; // Ajoutez le localStorageSyncReducer ici
 
 @NgModule({
-  declarations: [AppComponent, JobFormComponent, JobListComponent],
+  declarations: [AppComponent, JobFormComponent, JobListComponent, ProjectFormComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
