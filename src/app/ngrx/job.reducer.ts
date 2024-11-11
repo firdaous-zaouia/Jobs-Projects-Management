@@ -1,55 +1,42 @@
 import { createReducer, on } from "@ngrx/store";
 import { Job } from "./job.model";
-import { addJobSuccess, deleteJob, loadJobs, loadJobsSuccess } from "./job.actions";
+import { addJob, addJobSuccess, deleteJob, loadJobs, loadJobsSuccess, updateJob } from "./job.actions";
+import { state } from "@angular/animations";
 
 export interface JobState {
   jobs: Job[];
-  loading: boolean;
-  error: string | null;
 }
 
 export const initialState: JobState = {
   jobs: [],
-  loading: false,
-  error: null,
 };
 
 export const jobReducer = createReducer(
   initialState,
-  on(loadJobs, (state) => {
-    console.log("Loading jobs from localStorage...");
-    return {
-      ...state,
-      loading: true,
-      error: null,
-    };
-  }),
+  //charge les emplois depuis local storage
   on(loadJobsSuccess, (state, { jobs }) => {
-    const loadedJobs = jobs && jobs.length ? jobs : state.jobs;
-    console.log("Jobs loaded from localStorage: ", loadedJobs); // Log des jobs récupérés
+    console.log("Réduction de loadJobsSuccess avec jobs: ", jobs); 
     return {
       ...state,
-      jobs: loadedJobs, // S'assurer qu'on récupère bien les jobs
-      loading: false,
+      jobs: Array.isArray(jobs) ? jobs : []
     };
   }),
-  on(addJobSuccess, (state, { job }) => {
-    const updatedJobs = [...state.jobs, job];
-    localStorage.setItem('jobs', JSON.stringify({ jobs: updatedJobs })); // Mettre à jour localStorage
-    console.log('New job added and saved to localStorage: ', updatedJobs);
-    return {
+  // ajouter un nouveau emploi
+  on(addJob, (state, {job}) =>
+  ({
+    ...state,
+    jobs: [...state.jobs, job]
+  })),
+  // Mettre a jour un emploi
+  on(updateJob, (state, { id, job }) => ({
       ...state,
-      jobs: updatedJobs,
-      loading: false,
-    };
-  }),
-  on(deleteJob, (state, { index }) => {
-    const updatedJobs = state.jobs.filter((_, i) => i !== index);
-    localStorage.setItem('jobs', JSON.stringify({ jobs: updatedJobs })); // Mettre à jour localStorage après suppression
-    console.log('Job deleted and updated in localStorage: ', updatedJobs);
-    return {
-      ...state,
-      jobs: updatedJobs,
-    };
-  })
+      jobs: state.jobs.map(p =>
+        p.id === id ? {...p, ...job }:
+        p),
+    })),
+    //Supprimer un emploi
+  on(deleteJob, (state, { id }) => ({
+    ...state,
+    jobs: state.jobs.filter(p => p.id !== id)
+  }))
 );

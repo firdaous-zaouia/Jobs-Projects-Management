@@ -1,4 +1,5 @@
 export interface Job {
+    id: string;
     responsable: string;
     titre: string;
     localisation: string;

@@ -7,19 +7,20 @@ import { Job } from "src/app/ngrx/job.model";
 import { Store } from "@ngrx/store";
 import { addJob, updateJob} from "src/app/ngrx/job.actions";
 import { Observable } from "rxjs";
-import { selectJobByIndex } from "src/app/ngrx/job.selectors";
+import { v4 as uuidv4} from 'uuid';
+
 import { JobState } from "src/app/ngrx/job.reducer";
+import { AppState } from "src/app/shard/app.state";
 
 @Component({
   selector: "app-job-form",
   templateUrl: "./job-form.component.html",
-  // styleUrls: ['./job-form.component.css'],
   providers:[CurrencyPipe]
 })
 export class JobFormComponent implements OnInit {
   jobForm!: FormGroup;
   isEditing: boolean = false; // Variable pour savoir si on est en mode édition
-  currentIndex: number = -1; // Stocke l'index du job à éditer
+  JobId: string | null = null; // Stocke l'index du job à éditer
   job$!: Observable<Job | undefined>;
   categories: string[] = [
     'Marketing',
@@ -81,7 +82,7 @@ export class JobFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private store: Store<{jobs: JobState}>,
+    private store: Store<AppState>,
     private router: Router,
     private route: ActivatedRoute,
   ) {}
@@ -91,8 +92,8 @@ export class JobFormComponent implements OnInit {
     this.jobForm = this.fb.group(
       {
         responsable: ["",[Validators.required, Validators.pattern("^[a-zA-ZÀ-ÿ\\s-]+$")]],
-        index: [null], // Ajoute le champ index ici
-        titre: ["", [Validators.required, Validators.minLength(3)]], // Correspond à 'title' dans le template
+        index: [null], 
+        titre: ["", [Validators.required, Validators.minLength(3)]], 
         localisation: [
           "",
           [Validators.required, Validators.pattern("^[a-zA-ZÀ-ÿ\\s-]+$")],
@@ -100,7 +101,7 @@ export class JobFormComponent implements OnInit {
         categorie: [
           "",
           [Validators.required, Validators.pattern("^[a-zA-ZÀ-ÿ\\s-]+$")],
-        ], // Correspond à 'category' dans le template
+        ], 
         description: ["", Validators.required],
         dateDebut: ["", Validators.required],
         dateFin: [""],
@@ -113,26 +114,29 @@ export class JobFormComponent implements OnInit {
           ],
         ],
       },
-      { validators: DateValidator }
+      { validators: DateValidator('dateDebut','dateFin') }
     );
 
     // Vérifier si un emploi est en cours d'édition via l'URL
-    this.route.paramMap.subscribe((params) => {
-      const jobIndex = params.get("id");
-      if (jobIndex !== null) {
+    this.route.paramMap.subscribe(params => {
+      this.JobId = params.get("id");
+      if (this.JobId) {
         this.isEditing = true;
-        this.currentIndex = +jobIndex;
+        this.loadProjectData();
+      }});
+    }
   
-        // Utiliser le sélecteur pour récupérer l'emploi
-        this.job$ = this.store.select(selectJobByIndex(this.currentIndex)); // Utiliser le sélecteur
-        this.job$.subscribe((jobToEdit: Job | undefined) => {
-          if (jobToEdit) {
-            this.jobForm.patchValue(jobToEdit); // Pré-remplir le formulaire avec les données récupérées
+    loadProjectData(){
+      this.store.select(state => state.jobState.jobs).subscribe
+      (jobs =>{
+        const job = jobs.find(p =>
+          p.id === this.JobId);
+          if(job){
+            this.jobForm.patchValue(job);
           }
-        });
-      }
-    });
-  }
+      })
+    }
+  
 
   //Afficher le symbole monétaire
   onSalaryBlur(){
@@ -154,13 +158,13 @@ export class JobFormComponent implements OnInit {
 
   onSubmit() {
     if (this.jobForm.valid) {
-      const jobData: Job = this.jobForm.value;
-      if (this.isEditing && this.currentIndex !== null) {
+      const job = {...this.jobForm.value};
+      if (this.isEditing && this.JobId) {
         // Dispatch de l'action NGRX pour mettre à jour l'emploi
-        this.store.dispatch(updateJob({ index: this.currentIndex, job: jobData }));
+        this.store.dispatch(updateJob({ id: this.JobId, job }));
       } else {
         // Dispatch de l'action NGRX pour ajouter un nouvel emploi
-        this.store.dispatch(addJob({ job: jobData }));
+        this.store.dispatch(addJob({ job: {...job, id: uuidv4()}}));
       }
       // Rediriger vers la liste des emplois
       this.router.navigate(['/jobs']);
@@ -172,7 +176,7 @@ export class JobFormComponent implements OnInit {
   // Reinitialiser le formulaire et quitter le mode édition
   resetForm() {
     this.isEditing = false;
-    this.currentIndex = -1;
+    this.JobId = null;
     this.jobForm.reset();
   }
 }
