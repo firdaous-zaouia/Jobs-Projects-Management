@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { addProject, updateProject } from 'src/app/ngrx/project.action';
 import { DateValidator } from 'src/app/shard/date.validators';
+import { v4 as uuidv4} from 'uuid';
+import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { Project } from 'src/app/ngrx/project.model';
+import { ProjectState } from 'src/app/ngrx/project.reducer';
 
 @Component({
   selector: 'app-project-form',
@@ -8,6 +15,9 @@ import { DateValidator } from 'src/app/shard/date.validators';
 })
 export class ProjectFormComponent {
   projectForm!: FormGroup;
+  editMode = false;
+  projectId: string |null = null;
+
   categories: string[]=[
     'Education',
     'Environement',
@@ -54,7 +64,7 @@ export class ProjectFormComponent {
   }
 
   get  dateLimite(){
-    return this.projectForm.get("dateCreation");
+    return this.projectForm.get("dateLimite");
   }
 
   get description(){
@@ -62,7 +72,10 @@ export class ProjectFormComponent {
   }
 
   constructor(
-    private fb: FormBuilder){}
+    private fb: FormBuilder,
+    private store: Store<{ projectState: ProjectState }>, 
+    private router: Router,
+    private route: ActivatedRoute){}
 
     ngOnInit(){
       this.projectForm = this.fb.group(
@@ -84,9 +97,49 @@ export class ProjectFormComponent {
         dateCreation :["",Validators.required],
         dateLimite :["",Validators.required],
         description :["",Validators.required]
-      },{ Validators:DateValidator}
+      },{ validators: DateValidator('dateCreation','dateLimite')}
     );
+    
+
+//Récupérer l'ID du projet depuis les paramétre de la route
+    this.route.paramMap.subscribe(params =>{
+      this.projectId = params.get('id');
+      if (this.projectId){
+        this.editMode = true;
+        this.loadProjectData();
+      }
+    });
     }
-  
-  
+
+
+    loadProjectData(){
+      //Chargement du projet depuis le store
+      this.store.select(state => state.projectState.projects).subscribe(projects =>{
+        const project = projects.find(p => p.id === this.projectId);
+        if (project){
+          this.projectForm.patchValue(project);//Pré remplir le formulaire avec les données
+        }
+      }) 
+    }
+
+  onSubmit(){
+    if(this.projectForm.valid){
+      const project = { ...this.projectForm.value};
+      if (this.editMode && this.projectId){
+        this.store.dispatch(updateProject({ id: this.projectId, project }));
+      } else{
+        this.store.dispatch(addProject({ project: {...project, id: uuidv4()}}));
+      }
+      this.router.navigate(['/projects']);
+    }
+    else{
+      console.log("Formulaire invalide");
+      
+    }
+  }
+  resetForm() {
+    this.editMode = false;
+    this.projectId = null;
+    this.projectForm.reset();
+  }
 }

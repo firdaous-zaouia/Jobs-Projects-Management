@@ -1,42 +1,43 @@
 import { Component,OnInit } from "@angular/core";
 import { Store } from "@ngrx/store";
-import { loadJobs } from "src/app/ngrx/job.actions";
+import { loadJobs, deleteJob } from "src/app/ngrx/job.actions";
 import { Observable } from "rxjs";
-import { JobState } from "src/app/ngrx/job.reducer";
 import { Router } from "@angular/router";
 import { Job } from "src/app/ngrx/job.model";
 import * as bootstrap from 'bootstrap';
-import { deleteJob } from "src/app/ngrx/job.actions";
+import { AppState } from "src/app/shard/app.state";
 
 
 @Component({
   selector: "app-job-list",
   templateUrl: "./job-list.component.html",
-  // styleUrls:['./job-list.component.css']
 })
 export class JobListComponent implements OnInit {
   jobs$!: Observable<Job[]>;
-  jobToDeleteIndex: number | null=null;
+  jobToDeleteIndex: string | null=null;
 
-  constructor(private store:Store<{jobs: JobState }>, private router: Router){
+  constructor(private store: Store<AppState>, private router: Router)
+  {
+    this.jobs$ = this.store.select(state => state.jobState.jobs)
     
   }
 
   ngOnInit() {
-    //charger le job au demarage
-    this.jobs$ =this.store.select(state =>state.jobs.jobs);//selection du jobs depuis le stock NGRX
-    this.store.dispatch(loadJobs());//Declanche l'action pour charger les jobs
+    this.jobs$.subscribe(jobs => {
+      console.log('Emplois chargs depuis le store:', jobs);
+      
+    })
   }
 
   //Editer un job
-  editJob(index:number){
-    console.log('Edit job at index', index);
-    this.router.navigate(['jobs/edit', index]);
+  editJob(id: string){
+    console.log('Edit job at index', id);
+    this.router.navigate(['jobs/edit', id]);
   }
 
   //ouvrir le modal pour la suppression
-  openDeleteModal(index: number){
-    this.jobToDeleteIndex =index;
+  openDeleteModal(id: string){
+    this.jobToDeleteIndex =id;
     const modalElement = document.getElementById('confirmDeleteModal');
     if(modalElement){
       const modal=new bootstrap.Modal(modalElement);
@@ -48,7 +49,7 @@ export class JobListComponent implements OnInit {
   confirmDelete(){
     if(this.jobToDeleteIndex !== null){
       console.log('Confirm deletion for job at index:', this.jobToDeleteIndex);
-      this.store.dispatch(deleteJob({index: this.jobToDeleteIndex}));
+      this.store.dispatch(deleteJob({id: this.jobToDeleteIndex}));
       this.jobToDeleteIndex = null;
 
       const modalElement=document.getElementById('confirmDeleteModal');
@@ -60,5 +61,8 @@ export class JobListComponent implements OnInit {
   }
   addJob(){
     this.router.navigate(['jobs/new']);
+  }
+  returnHomePage(){
+    this.router.navigate(['']);
   }
 }

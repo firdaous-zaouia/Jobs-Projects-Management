@@ -4,7 +4,7 @@ import { Job } from "./job.model";
 
 //Action pour charger les emplois
 export const loadJobs = createAction('[Job List] Load Jobs');
-export const loadJobsSuccess =createAction('[Job List] Load Jobs         Success', props<{jobs: Job[]}>());
+export const loadJobsSuccess =createAction('[Job List] Load Jobs Success', props<{jobs: Job[]}>());
 export const loadJobsFailure = createAction('[Job List] Load Jobs Failure', props<{error:string}>());
 
 //Action pour ajouter un emploi
@@ -15,11 +15,11 @@ export const addJoFailure = createAction('[Job List] Add Job Failure', props<{er
 
 //Action updateJob
 export const updateJob = createAction('[Job Form] Update Job',
-    props<{index: number; job: Job}>()
+    props<{id: string; job: Job}>()
 );
 
 //Action pour supprimer un emploi
 export const deleteJob = createAction(
     '[Job List] Delete Job',
-    props<{index: number}>()
+    props<{id: string}>()
 );
